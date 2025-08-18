@@ -1,0 +1,43 @@
+{% extends "shop/base.html" %}
+{% block title %}Home - EcomSite{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text text-truncate" style="max-height: 60px;">{{ product.description }}</p>
+
+                <p class="card-text mt-auto">
+                    {% if product.discount_price %}
+                        <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
+                        <span class="text-success fw-bold ms-2">${{ product.discount_price }}</span>
+                    {% else %}
+                        <span class="fw-bold">${{ product.price }}</span>
+                    {% endif %}
+                </p>
+
+                <p class="card-text">
+                    <small class="text-muted">Category: {{ product.category }}</small>
+                </p>
+
+                <div class="d-flex justify-content-between">
+                    <a href="#" class="btn btn-info btn-sm">View</a>
+                    <a href="#" class="btn btn-primary btn-sm">Add to Cart</a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p class="text-center">No Products Available.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+
