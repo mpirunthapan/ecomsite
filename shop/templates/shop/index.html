@@ -3,16 +3,30 @@
 
 {% block content %}
 
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form class="card card-sm shadow-sm border-0">
+            <div class="card-body row g-2 align-items-center">
+                <div class="col">
+                    <input type="search" name="item_name" placeholder="Search for products" class="form-control form-control-lg border-0 shadow-sm">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success btn-lg px-4">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="row">
     {% for product in products %}
     <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
-            <div class="card-body d-flex flex-column">
+        <div class="card h-100 shadow-sm border-0 rounded-3">
+            <img src="{{ product.image }}" class="card-img-top rounded-top" alt="{{ product.name }}">
+            <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text text-truncate" style="max-height: 60px;">{{ product.description }}</p>
 
-                <p class="card-text mt-auto">
+                <p class="card-text mb-1">
                     {% if product.discount_price %}
                         <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
                         <span class="text-success fw-bold ms-2">${{ product.discount_price }}</span>
@@ -25,18 +39,81 @@
                     <small class="text-muted">Category: {{ product.category }}</small>
                 </p>
 
-                <div class="d-flex justify-content-between">
-                    <a href="#" class="btn btn-info btn-sm">View</a>
-                    <a href="#" class="btn btn-primary btn-sm">Add to Cart</a>
+                <div class="d-flex justify-content-between mt-2">
+                    <a href="#" class="btn btn-outline-info btn-sm px-3">View</a>
+                    <a href="#" class="btn btn-primary btn-sm px-3">Add to Cart</a>
                 </div>
                 
             </div>
         </div>
     </div>
     {% empty %}
-        <p class="text-center">No Products Available.</p>
+        <p class="text-center text-muted">No Products Available.</p>
     {% endfor %}
 </div>
+<div class="row">
+            <div class="col-md-12">
+                <nav aria-label="Product pagination">
+                    <ul class="pagination justify-content-center mt-4">
+
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; First</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo; First</span>
+                            </li>
+                        {% endif %}
+
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        {% endif %}
+
+                        {% for i in products.paginator.page_range %}
+                            {% if i >= products.number|add:-2 and i <= products.number|add:2 %}
+                                {% if i == products.number %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ i }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        {% endif %}
+
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Last &raquo;</span>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
 
 {% endblock %}
 
