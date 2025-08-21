@@ -27,23 +27,13 @@
                 <h5 class="card-title">{{ product.name }}</h5>
 
                 <p class="card-text mb-1">
-                    {% if product.discount_price %}
-                        <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
-                        <span class="text-success fw-bold ms-2">${{ product.discount_price }}</span>
-                    {% else %}
-                        <span class="fw-bold">${{ product.price }}</span>
-                    {% endif %}
-                </p>
-
-                <p class="card-text">
-                    <small class="text-muted">Category: {{ product.category }}</small>
+                    <span class="fw-bold">${{ product.price }}</span>
                 </p>
 
                 <div class="d-flex justify-content-between mt-2">
-                    <a href="#" class="btn btn-outline-info btn-sm px-3">View</a>
-                    <a href="#" class="btn btn-primary btn-sm px-3">Add to Cart</a>
+                    <a href="/{{ product.id }}" class="btn btn-outline-info btn-sm px-3">View</a>
+                    <a href="" class="btn btn-primary btn-sm px-3">Add to Cart</a>
                 </div>
-                
             </div>
         </div>
     </div>
