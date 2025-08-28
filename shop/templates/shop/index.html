@@ -17,17 +17,17 @@
         </form>
     </div>
 </div>
-
+0222222222
 <div class="row">
     {% for product in products %}
     <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm border-0 rounded-3">
             <img src="{{ product.image }}" class="card-img-top rounded-top" alt="{{ product.name }}">
             <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
+                <h5 id="nm{{product.id}}" class="card-title">{{ product.name }}</h5>
 
                 <p class="card-text mb-1">
-                    <span class="fw-bold">${{ product.price }}</span>
+                    <span id="price{{product.id}}" class="fw-bold">${{ product.price }}</span>
                 </p>
 
                 <div class="d-flex justify-content-between mt-2">
