@@ -9,8 +9,26 @@
 <div class="row mb-4">
     <div class="col-md-">
         <h4 class="mb-3 text-primary">Your Cart</h4>
-        <ul id="item_list" class="list-group">
-        </ul>
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="item_list"></tbody>
+            <tfoot>
+                <tr class="table-light">
+                    <td colspan="4" class="text-end fw-bold">Total</td>
+                    <td class="fw-bold" id="totalPrice">$0</td>
+                </tr>
+            </tfoot>
+        </table>
+
+
     </div>
 </div>
 
@@ -24,6 +42,7 @@
     <div class="col-md-12">
         <form class="needs-validation" novalidate="" method="post">
             {% csrf_token %}
+                <input type="hidden" name="items" id="items">
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label">First name</label>
@@ -41,11 +60,19 @@
                     </div>
                 </div>
 
-                <div class="col-12">
+                <div class="col-6">
                     <label for="email" class="form-label">Email</label>
                     <input id="email" name="email" type="email" class="form-control" placeholder="you@example.com" required="">
                     <div class="invalid-feedback">
                     Please enter a valid email address for shipping updates.
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label for="phoneNumber" class="form-label">Mobile Number</label>
+                    <input id="phoneNumber" name="phoneNumber" type="text" class="form-control" placeholder="0771122334" required="">
+                    <div class="invalid-feedback">
+                    Please enter a valid mobile number for shipping updates.
                     </div>
                 </div>
 
@@ -58,10 +85,18 @@
                 </div>
 
                 <div class="col-md-4">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" name="state" id="state" class="form-control" placeholder="" required="">
+                    <div class="invalid-feedback">
+                    Please provide a valid state.
+                    </div>
+                </div>
+
+                <div class="col-md-4">
                     <label for="city" class="form-label">City</label>
                     <input type="text" name="city" id="city" class="form-control" placeholder="" required="">
                     <div class="invalid-feedback">
-                    Please provide a valid state.
+                    Please provide a valid city.
                     </div>
                 </div>
 
@@ -72,59 +107,15 @@
                     Zip code required.
                     </div>
                 </div>
-            </div>
-
-            <hr class="my-4">
-
-            <hr class="my-4">
-
-            <h4 class="mb-3">Payment</h4>
-
-            <div class="my-3">
-                <div class="form-check">
-                    <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked="" required="">
-                    <label class="form-check-label" for="credit">Credit card</label>
-                </div>
-                <div class="form-check">
-                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required="">
-                    <label class="form-check-label" for="debit">Debit card</label>
-                </div>
-
-                <div class="row gy-3">
-                    <div class="col-md-6">
-                        <label for="cc-name" class="form-label">Name on card</label>
-                        <input type="text" class="form-control" id="cc-name" placeholder="" required="">
-                        <small class="text-muted">Full name as displayed on card</small>
-                    <div class="invalid-feedback">
-                    Name on card is required
-                    </div>
-                </div>
 
                 <div class="col-md-6">
-                    <label for="cc-number" class="form-label">Credit card number</label>
-                    <input type="text" class="form-control" id="cc-number" placeholder="" required="">
-                    <div class="invalid-feedback">
-                    Credit card number is required
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="cc-expiration" class="form-label">Expiration</label>
-                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
-                    <div class="invalid-feedback">
-                    Expiration date required
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="cc-cvv" class="form-label">CVV</label>
-                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
-                    <div class="invalid-feedback">
-                    Security code required
+                    <label for="total" class="form-label">Amount to paid</label>
+                    <input readonly type="text" class="form-control" id="total" name="total">
+                    <div>
                     </div>
                 </div>
             </div>
-
+            
             <hr class="my-4">
 
             <button class="w-100 btn btn-primary btn-lg" type="submit">Please Order</button>
@@ -143,16 +134,37 @@
     }
 
     let itemIndex = 1;
+    let total = 0;
 
     for(item in cart){
         let name = cart[item]['name'];
         let price = cart[item]['price'];
         let qty = cart[item]['qty'];
+        total += (qty * price);
 
-        itemString = `<li class="list-group-item d-flex justify-content-between align-items-center">${itemIndex}. ${name} - ${qty} - $${price}</li>`;
-        $('#item_list').append(itemString);
-        itemIndex += 1;
+        itemString = `
+            <tr>
+                <td>${itemIndex}.</td>
+                <td>${name}</td>
+                <td>
+                    <span class="badge bg-secondary">${qty}</span>
+                </td>
+                <td>
+                    <span class="badge bg-warning">$${price}</span>
+                </td>
+                <td>
+                    <span class="fw-bold">$${(qty * price).toFixed(2)}</span>
+                </td>
+            </tr>`;
 
+            $('#item_list').append(itemString);
+            itemIndex += 1;
     }
+
+    $('#total').val(`$${total.toFixed(2)}`);
+
+    $('#totalPrice').html(`$${total.toFixed(2)}`);
+
+    $('#items').val(JSON.stringify(cart));
 </script>
 {% endblock  %}
